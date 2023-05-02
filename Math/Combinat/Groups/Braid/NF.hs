@@ -485,8 +485,10 @@ leftGreedyFactors n input = filter (not . null) $ runST (action input) where
           doSwap p
           if c<=1
             then do
-              (f:fs) <- worker ps
-              return ((p:f):fs)
+              fs' <- worker ps
+              case fs' of
+                f:fs -> return ((p:f):fs)
+                [] -> error "leftGreedyFactors: unexpected empty list"
             else do
               clearMat
               fs <- worker (p:ps)
